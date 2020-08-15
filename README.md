@@ -14,11 +14,11 @@ go install queryfs.go
 <pre>
   <code>
 # Required
--d directory path to start searching from
+-d     directory path to start searching from
 
 # Optional (provide at least 1 option)
--s         display files/directories containing string
--p         display files/directories with matching permissions
+-s     display files/directories containing string
+-p     display files/directories with matching permissions
   </code>
 </pre>
 
