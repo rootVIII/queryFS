@@ -1,11 +1,11 @@
 ### queryFS - recursively query a Linux/Unix file system by substring or permissions
 
 
-###### Get the project:
+###### Get the project, :
 <pre>
   <code>
 go get github.com/rootVIII/queryfs
-go install queryfs.go
+go install github.com/rootVIII/queryfs
   </code>
 </pre>
 
