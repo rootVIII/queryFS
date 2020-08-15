@@ -1,7 +1,8 @@
 package main
 
-//   rootVIII
-//   recursively search a *NIX filesystem
+//  rootVIII
+//    recursively search a Linux filesystem
+//    by phrase and/or permissions
 
 import (
 	"flag"
@@ -9,19 +10,14 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
-	"syscall"
 )
 
 // QueryFS stores details related to the current search.
 type QueryFS struct {
-	Term        string
+	Substring   string
 	Permissions string
-	Owner       string
-	Group       string
 	IsTerm      bool
 	IsPerm      bool
-	IsOwner     bool
-	IsGroup     bool
 }
 
 func (q QueryFS) processed(fileName string, processedDirectories []string) bool {
@@ -34,9 +30,8 @@ func (q QueryFS) processed(fileName string, processedDirectories []string) bool 
 	return false
 }
 
-// ListDirContents recursively searches the entire
-// file-system starting from the provided path.
-func (q QueryFS) ListDirContents(path string, dirs []string) {
+// Query recursively searches entire file-system starting from provided path.
+func (q QueryFS) Query(path string, dirs []string) {
 	files, _ := ioutil.ReadDir(path)
 	for _, f := range files {
 		newPath := fmt.Sprintf("%s/%s", path, f.Name())
@@ -44,7 +39,7 @@ func (q QueryFS) ListDirContents(path string, dirs []string) {
 			if !q.processed(newPath, dirs) {
 				q.evaluate(newPath)
 				dirs = append(dirs, newPath)
-				q.ListDirContents(newPath, dirs)
+				q.Query(newPath, dirs)
 			}
 		} else {
 			q.evaluate(newPath)
@@ -54,7 +49,7 @@ func (q QueryFS) ListDirContents(path string, dirs []string) {
 
 func (q QueryFS) evaluate(path string) {
 	if q.IsTerm {
-		if !strings.Contains(path, q.Term) {
+		if !strings.Contains(path, q.Substring) {
 			goto end
 		}
 	}
@@ -63,15 +58,6 @@ func (q QueryFS) evaluate(path string) {
 		if err != nil || q.Permissions != fmt.Sprintf("%v", fstat.Mode().Perm()) {
 			goto end
 		}
-	}
-	if q.IsOwner || q.IsGroup {
-		fstat, err := os.Stat(path)
-		if err != nil {
-			goto end
-		}
-		stat, _ := fstat.Sys().(*syscall.Stat_t)
-		UID, GID := stat.Uid, stat.Gid
-		fmt.Printf("UID: %d, GID: %d\n", UID, GID)
 	}
 	fmt.Printf("%s\n", path)
 end:
@@ -84,10 +70,8 @@ func displayError(e error) {
 
 func main() {
 	path := flag.String("d", "", "directory")
-	term := flag.String("t", "", "term")
+	term := flag.String("s", "", "substring")
 	permissions := flag.String("p", "", "permissions")
-	owner := flag.String("o", "", "owner")
-	group := flag.String("g", "", "group")
 	flag.Parse()
 	if len(os.Args) < 5 {
 		displayError(fmt.Errorf("invalid arguments provided"))
@@ -107,14 +91,10 @@ func main() {
 	}
 
 	var qfs = &QueryFS{
-		Term:        *term,
+		Substring:   *term,
 		Permissions: *permissions,
-		Owner:       *owner,
-		Group:       *group,
 		IsTerm:      len(*term) > 0,
 		IsPerm:      len(*permissions) > 0,
-		IsOwner:     len(*owner) > 0,
-		IsGroup:     len(*group) > 0,
 	}
-	qfs.ListDirContents(start, []string{})
+	qfs.Query(start, []string{})
 }
