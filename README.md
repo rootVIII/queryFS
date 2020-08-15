@@ -1,4 +1,4 @@
-### queryFS - recursively query a Linux/Unix file system
+### queryFS - recursively query a Linux/Unix file system by substring or permissions
 
 
 ###### Get the project:
