@@ -1,8 +1,8 @@
 package main
 
 //  rootVIII
-//    recursively search a Linux filesystem
-//    by phrase and/or permissions
+//    recursively search and query a Linux filesystem
+//    by matching substring and/or permissions
 
 import (
 	"flag"
