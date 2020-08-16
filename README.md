@@ -28,7 +28,7 @@ go install github.com/rootVIII/queryfs
 <pre>
   <code>
 # Search /home and all subdirectories for any file
-# or directory path containing &#34;my_file.txt&#34;
+# or directory path containing text &#34;my_file.txt&#34;
 
 queryfs -d /home -s my_file.txt
 
