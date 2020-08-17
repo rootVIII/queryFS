@@ -41,12 +41,6 @@ queryfs -d / -p -rwxrwxrwx
 
 
 # Search /var and all subdirectories
-# for any file with 0777 permissions
-
-queryfs -d /var -p -rwxrwxrwx
-
-
-# Search /var and all subdirectories
 # for any file with owner/group apache:apache
 
 queryfs -d /var -p apache:apache
