@@ -50,17 +50,17 @@ func (q QueryFS) Query(path string, dirs []string) {
 
 		if f.IsDir() {
 			if !q.processed(newPath, dirs) {
-				q.evaluate(newPath)
+				q.evaluate(newPath, true)
 				dirs = append(dirs, newPath)
 				q.Query(newPath, dirs)
 			}
 		} else {
-			q.evaluate(newPath)
+			q.evaluate(newPath, false)
 		}
 	}
 }
 
-func (q QueryFS) evaluate(path string) {
+func (q QueryFS) evaluate(path string, isDirectory bool) {
 	if q.IsTerm {
 		if !strings.Contains(path, q.Substring) {
 			goto end
@@ -68,7 +68,18 @@ func (q QueryFS) evaluate(path string) {
 	}
 	if q.IsPerm {
 		fstat, err := os.Stat(path)
-		if err != nil || q.Permissions != fmt.Sprintf("%v", fstat.Mode().Perm()) {
+		if err != nil {
+			goto end
+		}
+		var permissions string
+		if isDirectory {
+			tmp := []byte(fmt.Sprintf("%v", fstat.Mode().Perm()))
+			tmp[0] = 0x64
+			permissions = string(tmp)
+		} else {
+			permissions = fmt.Sprintf("%v", fstat.Mode().Perm())
+		}
+		if q.Permissions != permissions {
 			goto end
 		}
 	}
