@@ -51,7 +51,7 @@ queryfs -d / -p drwxrwxrwx
 <pre>
   <code>
 #  Search /var and all subdirectories for any file with owner/group apache:apache
-queryfs -d /var -p apache:apache
+queryfs -d /var -o apache:apache
   </code>
 </pre>
 
