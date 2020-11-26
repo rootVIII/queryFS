@@ -28,7 +28,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/rootVIII/queryfs/queryfs"
+	"github.com/rootVIII/queryfs/query"
 )
 
 func displayError(e error) {
@@ -59,7 +59,7 @@ func main() {
 		start = start[:len(*path)-1]
 	}
 
-	var qfs = &queryfs.QueryFS{
+	var qfs = &query.QFS{
 		Substring:    *term,
 		Permissions:  *permissions,
 		OwnerGroup:   *og,

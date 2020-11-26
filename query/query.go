@@ -1,4 +1,4 @@
-package queryfs
+package query
 
 //    recursively search and query a Linux filesystem
 //    by matching substring and/or permissions
@@ -33,8 +33,8 @@ import (
 	"syscall"
 )
 
-// QueryFS stores details related to the current search.
-type QueryFS struct {
+// QFS stores details related to the current search.
+type QFS struct {
 	Substring    string
 	Permissions  string
 	OwnerGroup   string
@@ -45,7 +45,7 @@ type QueryFS struct {
 	Passwd       map[int]string
 }
 
-func (q QueryFS) processed(fileName string, processedDirectories []string) bool {
+func (q QFS) processed(fileName string, processedDirectories []string) bool {
 	for i := 0; i < len(processedDirectories); i++ {
 		if processedDirectories[i] != fileName {
 			continue
@@ -56,7 +56,7 @@ func (q QueryFS) processed(fileName string, processedDirectories []string) bool 
 }
 
 // Query recursively searches entire file-system starting from provided path.
-func (q QueryFS) Query(path string, dirs []string) {
+func (q QFS) Query(path string, dirs []string) {
 	files, _ := ioutil.ReadDir(path)
 	for _, f := range files {
 		var newPath string
@@ -78,7 +78,7 @@ func (q QueryFS) Query(path string, dirs []string) {
 	}
 }
 
-func (q QueryFS) evaluate(path string, isDirectory bool) {
+func (q QFS) evaluate(path string, isDirectory bool) {
 	if q.IsTerm {
 		if !strings.Contains(path, q.Substring) {
 			goto end
@@ -117,7 +117,7 @@ func (q QueryFS) evaluate(path string, isDirectory bool) {
 end:
 }
 
-func (q *QueryFS) parseIDS(idFile string, wgroup *sync.WaitGroup) {
+func (q *QFS) parseIDS(idFile string, wgroup *sync.WaitGroup) {
 	defer wgroup.Done()
 	for _, line := range strings.Split(readIn(idFile), "\n") {
 		if len(line) > 0 {
@@ -133,7 +133,7 @@ func (q *QueryFS) parseIDS(idFile string, wgroup *sync.WaitGroup) {
 }
 
 // SetIDS sets contents of /etc/passwd and /etc/group if querying with owner:group.
-func (q *QueryFS) SetIDS() {
+func (q *QFS) SetIDS() {
 	if q.IsOwnerGroup {
 		q.Group = make(map[int]string)
 		q.Passwd = make(map[int]string)
