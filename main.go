@@ -27,8 +27,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
-
-	"github.com/rootVIII/queryfs/query"
+	"queryFS/query"
 )
 
 func displayError(e error) {
