@@ -4,7 +4,7 @@
 ###### Get the project, :
 <pre>
   <code>
-# Clone project
+# Clone project:
 git clone https://github.com/rootVIII/queryFS.git
 
 # Build and run:
@@ -12,7 +12,7 @@ cd &lt;project root&gt;
 go build -o bin/queryfs
 ./bin/queryfs 
 
-# Build binary in ~/go/bin (available in path) and run
+# Build binary in ~/go/bin (available in path) and run:
 cd &lt;project root&gt;
 go install .
 queryfs
