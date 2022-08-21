@@ -45,7 +45,7 @@ type QFS struct {
 	Passwd       map[int]string
 }
 
-func (q QFS) processed(fileName string, processedDirectories []string) bool {
+func (q *QFS) processed(fileName string, processedDirectories []string) bool {
 	for i := 0; i < len(processedDirectories); i++ {
 		if processedDirectories[i] != fileName {
 			continue
@@ -56,7 +56,7 @@ func (q QFS) processed(fileName string, processedDirectories []string) bool {
 }
 
 // Query recursively searches entire file-system starting from provided path.
-func (q QFS) Query(path string, dirs []string) {
+func (q *QFS) Query(path string, dirs []string) {
 	files, _ := ioutil.ReadDir(path)
 	for _, f := range files {
 		var newPath string
@@ -78,7 +78,7 @@ func (q QFS) Query(path string, dirs []string) {
 	}
 }
 
-func (q QFS) evaluate(path string, isDirectory bool) {
+func (q *QFS) evaluate(path string, isDirectory bool) {
 	if q.IsTerm {
 		if !strings.Contains(path, q.Substring) {
 			goto end
